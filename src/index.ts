@@ -6,6 +6,7 @@ import rateLimit from "express-rate-limit";
 import { Request, Response } from "express";
 import ErrorMiddleware from "./app/middleware/Error.middleware";
 import config from "./app/config";
+import db from "./app/database/Connect";
 
 const PORT = config.port || 5000;
 const app: Application = express();
@@ -27,6 +28,19 @@ app.use(
       "Too many accounts Requests from this IP, please try again after an hour",
   })
 );
+
+db.connect().then((client) => {
+  return client
+    .query("SELECT NOW()")
+    .then((res) => {
+      client.release();
+      console.log(res.rows);
+    })
+    .catch((err) => {
+      client.release();
+      console.log(err);
+    });
+});
 
 app.use("/user", UserRouter);
 
