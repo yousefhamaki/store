@@ -4,11 +4,13 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = __importDefault(require("express"));
-const UserRouter_1 = __importDefault(require("./app/routes/UserRouter"));
 const morgan_1 = __importDefault(require("morgan"));
 const helmet_1 = __importDefault(require("helmet"));
 const express_rate_limit_1 = __importDefault(require("express-rate-limit"));
-const PORT = 5000;
+const Error_middleware_1 = __importDefault(require("./app/middleware/Error.middleware"));
+const config_1 = __importDefault(require("./app/config"));
+const index_1 = __importDefault(require("./app/routes/index"));
+const PORT = config_1.default.port || 5000;
 const app = (0, express_1.default)();
 //middleware to parse incoming request
 app.use(express_1.default.json());
@@ -24,6 +26,15 @@ app.use((0, express_rate_limit_1.default)({
     legacyHeaders: false,
     message: "Too many accounts Requests from this IP, please try again after an hour",
 }));
-app.use("/user", UserRouter_1.default);
+//routers
+app.use("/api", index_1.default);
+//handle errors
+app.use(Error_middleware_1.default);
+//404 Request
+app.use((_req, res) => {
+    res.status(404).json({
+        message: "ohh you are lost, read the documentation to find your way",
+    });
+});
 app.listen(PORT, () => console.log(`server is listening on port ${PORT}`));
 exports.default = app;

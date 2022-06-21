@@ -23,6 +23,6 @@ module.exports = {
       },
     ],
     // "no-console": 1,
-    "no-var": "error",
+    // "no-var": "error",
   },
 };

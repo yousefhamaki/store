@@ -1,12 +1,11 @@
 import express, { Application } from "express";
-import UserRouter from "./app/routes/UserRouter";
 import morgan from "morgan";
 import helmet from "helmet";
 import rateLimit from "express-rate-limit";
 import { Request, Response } from "express";
 import ErrorMiddleware from "./app/middleware/Error.middleware";
 import config from "./app/config";
-import db from "./app/database/Connect";
+import Routers from "./app/routes/index";
 
 const PORT = config.port || 5000;
 const app: Application = express();
@@ -29,23 +28,13 @@ app.use(
   })
 );
 
-db.connect().then((client) => {
-  return client
-    .query("SELECT NOW()")
-    .then((res) => {
-      client.release();
-      console.log(res.rows);
-    })
-    .catch((err) => {
-      client.release();
-      console.log(err);
-    });
-});
+//routers
+app.use("/api", Routers);
 
-app.use("/user", UserRouter);
-
+//handle errors
 app.use(ErrorMiddleware);
 
+//404 Request
 app.use((_req: Request, res: Response) => {
   res.status(404).json({
     message: "ohh you are lost, read the documentation to find your way",
