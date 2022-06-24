@@ -27,7 +27,7 @@ class ProductModel {
                 return result.rows[0];
             }
             catch (err) {
-                throw new Error(`Unable to create ${product.name} : ${err.message}`);
+                throw new Error(`Unable to create user`);
             }
         });
     }
@@ -68,7 +68,7 @@ class ProductModel {
         return __awaiter(this, void 0, void 0, function* () {
             try {
                 const connect = yield Connect_1.default.connect();
-                const query = `UPDATE products SET name=$1 , price=$2 WHERE id=$3`;
+                const query = `UPDATE products SET name=$1 , price=$2 WHERE id=$3 returning *`;
                 const result = yield connect.query(query, [
                     product.name,
                     product.price,
@@ -89,7 +89,7 @@ class ProductModel {
         return __awaiter(this, void 0, void 0, function* () {
             try {
                 const connect = yield Connect_1.default.connect();
-                const query = `UPDATE products WHERE id=$1`;
+                const query = `DELETE FROM products WHERE id=$1 returning *`;
                 const result = yield connect.query(query, [id]);
                 //release connection
                 connect.release();

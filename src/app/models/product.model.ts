@@ -13,9 +13,7 @@ class ProductModel {
       //return result
       return result.rows[0];
     } catch (err) {
-      throw new Error(
-        `Unable to create ${product.name} : ${(err as Error).message}`
-      );
+      throw new Error(`Unable to create user`);
     }
   }
   async getAll(): Promise<Product[]> {
@@ -50,7 +48,7 @@ class ProductModel {
   async updateProduct(product: Product): Promise<Product> {
     try {
       const connect = await db.connect();
-      const query = `UPDATE products SET name=$1 , price=$2 WHERE id=$3`;
+      const query = `UPDATE products SET name=$1 , price=$2 WHERE id=$3 returning *`;
       const result = await connect.query(query, [
         product.name,
         product.price,
@@ -70,7 +68,7 @@ class ProductModel {
   async deleteProduct(id: string): Promise<Product> {
     try {
       const connect = await db.connect();
-      const query = `UPDATE products WHERE id=$1`;
+      const query = `DELETE FROM products WHERE id=$1 returning *`;
       const result = await connect.query(query, [id]);
       //release connection
       connect.release();

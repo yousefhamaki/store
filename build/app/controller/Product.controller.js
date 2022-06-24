@@ -1,4 +1,27 @@
 "use strict";
+var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    var desc = Object.getOwnPropertyDescriptor(m, k);
+    if (!desc || ("get" in desc ? !m.__esModule : desc.writable || desc.configurable)) {
+      desc = { enumerable: true, get: function() { return m[k]; } };
+    }
+    Object.defineProperty(o, k2, desc);
+}) : (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    o[k2] = m[k];
+}));
+var __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (function(o, v) {
+    Object.defineProperty(o, "default", { enumerable: true, value: v });
+}) : function(o, v) {
+    o["default"] = v;
+});
+var __importStar = (this && this.__importStar) || function (mod) {
+    if (mod && mod.__esModule) return mod;
+    var result = {};
+    if (mod != null) for (var k in mod) if (k !== "default" && Object.prototype.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
+    __setModuleDefault(result, mod);
+    return result;
+};
 var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
     function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
     return new (P || (P = Promise))(function (resolve, reject) {
@@ -14,21 +37,15 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const product_model_1 = __importDefault(require("../models/product.model"));
 const CheckQuery_1 = __importDefault(require("../traits/CheckQuery"));
+const requests = __importStar(require("./../traits/Requests"));
 const productModel = new product_model_1.default();
 class ProductRouter {
     create(req, res, next) {
         return __awaiter(this, void 0, void 0, function* () {
             /* request query handler */
-            const required = {
-                name: "required",
-                price: "required|number",
-            };
-            const requestInfo = (0, CheckQuery_1.default)(req.body, required);
+            const requestInfo = (0, CheckQuery_1.default)(req.body, requests.createProduct);
             if (requestInfo.length > 0) {
-                return res.status(412).json({
-                    status: "failed",
-                    message: requestInfo[0],
-                });
+                return res.status(412).json(requests.validReturn(requestInfo));
             }
             try {
                 //add product
@@ -75,17 +92,9 @@ class ProductRouter {
     updateProduct(req, res, next) {
         return __awaiter(this, void 0, void 0, function* () {
             /* request query handler */
-            const required = {
-                id: "required",
-                name: "required",
-                price: "required|number",
-            };
-            const requestInfo = (0, CheckQuery_1.default)(req.body, required);
+            const requestInfo = (0, CheckQuery_1.default)(req.body, requests.updateProduct);
             if (requestInfo.length > 0) {
-                return res.status(412).json({
-                    status: "failed",
-                    message: requestInfo[0],
-                });
+                return res.status(412).json(requests.validReturn(requestInfo));
             }
             try {
                 const update = yield productModel.updateProduct(req.body);

@@ -4,6 +4,8 @@ import UserModel from "./../models/user.model";
 import JsonReurn from "../interface/JsonReturn";
 import jwt from "jsonwebtoken";
 import config from "../config";
+import * as requests from "./../traits/Requests";
+import ARequest from "../interface/Request.interface";
 
 const userModel = new UserModel();
 
@@ -14,19 +16,9 @@ class userController {
     next: NextFunction
   ): Promise<Response<JsonReurn> | void> {
     /* request query handler */
-    const required: { [key: string]: string } = {
-      email: "required",
-      username: "required",
-      firstname: "required",
-      lastname: "required",
-      password: "required",
-    };
-    const requestInfo: string[] = QueryCheck(req.body, required);
+    const requestInfo: string[] = QueryCheck(req.body, requests.createUser);
     if (requestInfo.length > 0) {
-      return res.status(412).json({
-        status: "failed",
-        message: requestInfo[0],
-      });
+      return res.status(412).json(requests.validReturn(requestInfo));
     }
     //add new user
     try {
@@ -66,7 +58,6 @@ class userController {
   ): Promise<Request<JsonReurn> | unknown> {
     try {
       const user = await userModel.getUser(req.params.id);
-
       return res.json({
         status: "success",
         data: user,
@@ -82,16 +73,9 @@ class userController {
     next: NextFunction
   ): Promise<Request<JsonReurn> | unknown> {
     /* request query handler */
-    const required: { [key: string]: string } = {
-      email: "required",
-      password: "required",
-    };
-    const requestInfo: string[] = QueryCheck(req.body, required);
+    const requestInfo: string[] = QueryCheck(req.body, requests.makeLogin);
     if (requestInfo.length > 0) {
-      return res.status(412).json({
-        status: "failed",
-        message: requestInfo[0],
-      });
+      return res.status(412).json(requests.validReturn(requestInfo));
     }
 
     try {
@@ -105,10 +89,10 @@ class userController {
         });
       }
       const token = jwt.sign({ user }, config.secretToken as unknown as string);
-      return res.status(401).json({
+      return res.status(200).json({
         status: "success",
         message: "user is login successfully",
-        data: { ...user, token },
+        data: { ...user, token: "Bearer " + token },
       });
     } catch (err) {
       next(err);
@@ -116,23 +100,14 @@ class userController {
   }
 
   async updateuserinfo(
-    req: Request,
+    req: ARequest,
     res: Response,
     next: NextFunction
   ): Promise<Response<JsonReurn> | void> {
     /* request query handler */
-    const required: { [key: string]: string } = {
-      email: "required",
-      username: "required",
-      firstname: "required",
-      lastname: "required",
-    };
-    const requestInfo: string[] = QueryCheck(req.body, required);
+    const requestInfo: string[] = QueryCheck(req.body, requests.updateUserInfo);
     if (requestInfo.length > 0) {
-      return res.status(412).json({
-        status: "failed",
-        message: requestInfo[0],
-      });
+      return res.status(412).json(requests.validReturn(requestInfo));
     }
     try {
       const change = await userModel.updateUser(req.body);
@@ -171,16 +146,9 @@ class userController {
     next: NextFunction
   ): Promise<Response<JsonReurn> | void> {
     /* request query handler */
-    const required: { [key: string]: string } = {
-      oldpass: "required",
-      newpass: "required",
-    };
-    const requestInfo: string[] = QueryCheck(req.body, required);
+    const requestInfo: string[] = QueryCheck(req.body, requests.changePass);
     if (requestInfo.length > 0) {
-      return res.status(412).json({
-        status: "failed",
-        message: requestInfo[0],
-      });
+      return res.status(412).json(requests.validReturn(requestInfo));
     }
     try {
       const update = await userModel.changePass(

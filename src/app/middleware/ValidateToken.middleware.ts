@@ -1,28 +1,42 @@
-import { NextFunction, Request, Response } from "express";
-import jwt from "jsonwebtoken";
+import { NextFunction, Response } from "express";
+// import Request from "./../interface/Request.interface";
+import jwt, { JwtPayload } from "jsonwebtoken";
+import Error from "../interface/Error.interface";
 import config from "../config";
+import ARequest from "../interface/Request.interface";
 
-const ValidToken = (req: Request, _res: Response, next: NextFunction) => {
+const HandleUnauthError = (next: NextFunction) => {
+  const err: Error = new Error("error Auth: please try again");
+
+  err.status = 401;
+  next(err);
+};
+
+const ValidToken = (req: ARequest, _res: Response, next: NextFunction) => {
   try {
-    const auth = req.headers.authorization;
+    const auth = req.headers.authorization as string;
     if (auth) {
       const authData = auth.split(" ");
-      const authType = authData[0].toLowerCase as unknown;
+      const authType = authData[0].toLowerCase();
       const token = authData[1];
 
       if (token && authType === "bearer") {
-        const check = jwt.verify(
+        const check: JwtPayload = jwt.verify(
           token,
           config.secretToken as unknown as string
-        );
+        ) as JwtPayload;
         if (check) {
+          req.user = check.user;
           next();
+        } else {
+          HandleUnauthError(next);
         }
       }
+    } else {
+      HandleUnauthError(next);
     }
-    throw new Error("error Auth: please try again");
   } catch (err) {
-    throw new Error("error Auth: please try again");
+    HandleUnauthError(next);
   }
 };
 

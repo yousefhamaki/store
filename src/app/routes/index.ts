@@ -5,8 +5,8 @@ import OrderRouter from "./api/order.router";
 
 const router = Router();
 
-router.use("/api/user", UserRouter);
-router.use("/api/product", ProductRouter);
-router.use("*api/order", OrderRouter);
+router.use("/user", UserRouter);
+router.use("/product", ProductRouter);
+router.use("/order", OrderRouter);
 
 export default router;

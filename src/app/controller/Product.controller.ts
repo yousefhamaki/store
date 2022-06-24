@@ -2,6 +2,7 @@ import { Request, Response, NextFunction } from "express";
 import JsonReurn from "../interface/JsonReturn";
 import ProductModel from "../models/product.model";
 import QueryCheck from "../traits/CheckQuery";
+import * as requests from "./../traits/Requests";
 
 const productModel = new ProductModel();
 
@@ -12,16 +13,9 @@ class ProductRouter {
     next: NextFunction
   ): Promise<Response<JsonReurn> | void> {
     /* request query handler */
-    const required: { [key: string]: string } = {
-      name: "required",
-      price: "required|number",
-    };
-    const requestInfo: string[] = QueryCheck(req.body, required);
+    const requestInfo: string[] = QueryCheck(req.body, requests.createProduct);
     if (requestInfo.length > 0) {
-      return res.status(412).json({
-        status: "failed",
-        message: requestInfo[0],
-      });
+      return res.status(412).json(requests.validReturn(requestInfo));
     }
 
     try {
@@ -77,17 +71,9 @@ class ProductRouter {
     next: NextFunction
   ): Promise<Response<JsonReurn> | void> {
     /* request query handler */
-    const required: { [key: string]: string } = {
-      id: "required",
-      name: "required",
-      price: "required|number",
-    };
-    const requestInfo: string[] = QueryCheck(req.body, required);
+    const requestInfo: string[] = QueryCheck(req.body, requests.updateProduct);
     if (requestInfo.length > 0) {
-      return res.status(412).json({
-        status: "failed",
-        message: requestInfo[0],
-      });
+      return res.status(412).json(requests.validReturn(requestInfo));
     }
 
     try {

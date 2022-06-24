@@ -27,12 +27,19 @@ app.use((0, express_rate_limit_1.default)({
     message: "Too many accounts Requests from this IP, please try again after an hour",
 }));
 //routers
+app.get("/", (_, res) => {
+    return res.status(200).json({
+        status: "success",
+        message: "Welcome to store App",
+    });
+});
 app.use("/api", index_1.default);
 //handle errors
 app.use(Error_middleware_1.default);
 //404 Request
 app.use((_req, res) => {
     res.status(404).json({
+        status: "error",
         message: "ohh you are lost, read the documentation to find your way",
     });
 });

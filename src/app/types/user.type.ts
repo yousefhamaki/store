@@ -5,6 +5,7 @@ type User = {
   firstname: string;
   lastname: string;
   password: string;
+  token?: string;
 };
 
 export default User;

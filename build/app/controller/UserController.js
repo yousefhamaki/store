@@ -1,4 +1,27 @@
 "use strict";
+var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    var desc = Object.getOwnPropertyDescriptor(m, k);
+    if (!desc || ("get" in desc ? !m.__esModule : desc.writable || desc.configurable)) {
+      desc = { enumerable: true, get: function() { return m[k]; } };
+    }
+    Object.defineProperty(o, k2, desc);
+}) : (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    o[k2] = m[k];
+}));
+var __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (function(o, v) {
+    Object.defineProperty(o, "default", { enumerable: true, value: v });
+}) : function(o, v) {
+    o["default"] = v;
+});
+var __importStar = (this && this.__importStar) || function (mod) {
+    if (mod && mod.__esModule) return mod;
+    var result = {};
+    if (mod != null) for (var k in mod) if (k !== "default" && Object.prototype.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
+    __setModuleDefault(result, mod);
+    return result;
+};
 var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
     function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
     return new (P || (P = Promise))(function (resolve, reject) {
@@ -16,24 +39,15 @@ const CheckQuery_1 = __importDefault(require("../traits/CheckQuery"));
 const user_model_1 = __importDefault(require("./../models/user.model"));
 const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
 const config_1 = __importDefault(require("../config"));
+const requests = __importStar(require("./../traits/Requests"));
 const userModel = new user_model_1.default();
 class userController {
     create(req, res, next) {
         return __awaiter(this, void 0, void 0, function* () {
             /* request query handler */
-            const required = {
-                email: "required",
-                username: "required",
-                firstname: "required",
-                lastname: "required",
-                password: "required",
-            };
-            const requestInfo = (0, CheckQuery_1.default)(req.body, required);
+            const requestInfo = (0, CheckQuery_1.default)(req.body, requests.createUser);
             if (requestInfo.length > 0) {
-                return res.status(412).json({
-                    status: "failed",
-                    message: requestInfo[0],
-                });
+                return res.status(412).json(requests.validReturn(requestInfo));
             }
             //add new user
             try {
@@ -80,16 +94,9 @@ class userController {
     login(req, res, next) {
         return __awaiter(this, void 0, void 0, function* () {
             /* request query handler */
-            const required = {
-                email: "required",
-                password: "required",
-            };
-            const requestInfo = (0, CheckQuery_1.default)(req.body, required);
+            const requestInfo = (0, CheckQuery_1.default)(req.body, requests.makeLogin);
             if (requestInfo.length > 0) {
-                return res.status(412).json({
-                    status: "failed",
-                    message: requestInfo[0],
-                });
+                return res.status(412).json(requests.validReturn(requestInfo));
             }
             try {
                 const { email, password } = req.body;
@@ -101,10 +108,10 @@ class userController {
                     });
                 }
                 const token = jsonwebtoken_1.default.sign({ user }, config_1.default.secretToken);
-                return res.status(401).json({
+                return res.status(200).json({
                     status: "success",
                     message: "user is login successfully",
-                    data: Object.assign(Object.assign({}, user), { token }),
+                    data: Object.assign(Object.assign({}, user), { token: "Bearer " + token }),
                 });
             }
             catch (err) {
@@ -115,18 +122,9 @@ class userController {
     updateuserinfo(req, res, next) {
         return __awaiter(this, void 0, void 0, function* () {
             /* request query handler */
-            const required = {
-                email: "required",
-                username: "required",
-                firstname: "required",
-                lastname: "required",
-            };
-            const requestInfo = (0, CheckQuery_1.default)(req.body, required);
+            const requestInfo = (0, CheckQuery_1.default)(req.body, requests.updateUserInfo);
             if (requestInfo.length > 0) {
-                return res.status(412).json({
-                    status: "failed",
-                    message: requestInfo[0],
-                });
+                return res.status(412).json(requests.validReturn(requestInfo));
             }
             try {
                 const change = yield userModel.updateUser(req.body);
@@ -159,16 +157,9 @@ class userController {
     changePass(req, res, next) {
         return __awaiter(this, void 0, void 0, function* () {
             /* request query handler */
-            const required = {
-                oldpass: "required",
-                newpass: "required",
-            };
-            const requestInfo = (0, CheckQuery_1.default)(req.body, required);
+            const requestInfo = (0, CheckQuery_1.default)(req.body, requests.changePass);
             if (requestInfo.length > 0) {
-                return res.status(412).json({
-                    status: "failed",
-                    message: requestInfo[0],
-                });
+                return res.status(412).json(requests.validReturn(requestInfo));
             }
             try {
                 const update = yield userModel.changePass(req.params.id, req.body.oldpass, req.body.newpass);

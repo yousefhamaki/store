@@ -21,7 +21,7 @@ class UserModel {
             try {
                 const connect = yield Connect_1.default.connect();
                 const query = `INSERT INTO users (email, username, firstname, lastname, password) 
-                    values ($1, $2, $3, $4, $5) returning email, username, firstname, lastname, password`;
+                    values ($1, $2, $3, $4, $5) returning id, email, username, firstname, lastname`;
                 const result = yield connect.query(query, [
                     user.email,
                     user.username,
@@ -44,7 +44,7 @@ class UserModel {
         return __awaiter(this, void 0, void 0, function* () {
             try {
                 const connect = yield Connect_1.default.connect();
-                const query = `SELECT email, username, firstname, lastname FROM users`;
+                const query = `SELECT id, email, username, firstname, lastname FROM users`;
                 const result = yield connect.query(query);
                 //release connection
                 connect.release();
@@ -78,7 +78,9 @@ class UserModel {
         return __awaiter(this, void 0, void 0, function* () {
             try {
                 const connect = yield Connect_1.default.connect();
-                const query = `UPDATE users SET username=$1 , email=$2 , firstname=$3, lastname=$4 WHERE id=$5`;
+                const query = `UPDATE users SET username=$1 , email=$2 , firstname=$3, lastname=$4 
+                      WHERE id=$5 
+                      returning username, email, firstname, lastname`;
                 const result = yield connect.query(query, [
                     user.username,
                     user.email,
@@ -101,7 +103,7 @@ class UserModel {
         return __awaiter(this, void 0, void 0, function* () {
             try {
                 const connect = yield Connect_1.default.connect();
-                const query = `UPDATE users WHERE id=$1`;
+                const query = `DELETE FROM users WHERE id=$1 returning *`;
                 const result = yield connect.query(query, [id]);
                 //release connection
                 connect.release();
@@ -141,15 +143,23 @@ class UserModel {
         return __awaiter(this, void 0, void 0, function* () {
             try {
                 const connect = yield Connect_1.default.connect();
-                const query = `SELECT password FROM users WHERE id=$1 AND password=$2`;
-                const result = yield connect.query(query, [id, oldpass]);
+                const query = `SELECT password FROM users WHERE id=$1`;
+                const result = yield connect.query(query, [id]);
                 if (result.rows.length > 0) {
-                    const query = `UPDATE users SET password=$1`;
-                    yield connect.query(query, [newpass]);
-                    //release connection
-                    connect.release();
-                    //return result
-                    return true;
+                    const { password: hash } = result.rows[0];
+                    const check = yield HashPass_1.default.check(oldpass, hash);
+                    if (check) {
+                        const query = `UPDATE users SET password=$1 WHERE id=$2`;
+                        yield connect.query(query, [newpass, id]);
+                        //release connection
+                        connect.release();
+                        return true;
+                    }
+                    else {
+                        //release connection
+                        connect.release();
+                        return false;
+                    }
                 }
                 else {
                     return false;

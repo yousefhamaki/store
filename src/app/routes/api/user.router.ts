@@ -1,16 +1,17 @@
 import { Router } from "express";
 import controllers from "../../controller/UserController";
+import Auth from "../../middleware/ValidateToken.middleware";
 
 const routes = Router();
 
 const controller = new controllers();
 
-routes.get("/", controller.getAllUsers);
-routes.get("/:id", controller.getUser);
-routes.post("/create", controller.create);
-routes.post("/login", controller.login);
-routes.put("/change", controller.updateuserinfo);
-routes.put("/change/:id", controller.changePass);
-routes.delete("/delete/:id", controller.deleteUser);
+routes.get("/", Auth, controller.getAllUsers); //tested
+routes.patch("/:id", Auth, controller.getUser); //tested
+routes.post("/create", controller.create); //tested
+routes.post("/login", controller.login); //tested
+routes.put("/change", Auth, controller.updateuserinfo); //tested
+routes.put("/change/:id", Auth, controller.changePass); //tested
+routes.delete("/delete/:id", Auth, controller.deleteUser); //tested
 
 export default routes;
