@@ -18,11 +18,7 @@ const user = {
     firstname: "yousef",
     lastname: "hamaki2",
     username: "yousef-hamaki-order",
-    email: "order@gmail.com",
-    password: "hamaki2603",
-};
-const user3 = {
-    email: "order@gmail.com",
+    email: "add_order@gmail.com",
     password: "hamaki2603",
 };
 const product = {
@@ -35,7 +31,7 @@ const order = {
 };
 const request = (0, supertest_1.default)(index_1.default);
 //create and auth user to make product requests
-describe("POST /api/user/create", function () {
+describe("create new user and make auth to add order", function () {
     it("returns status code `200`", () => __awaiter(this, void 0, void 0, function* () {
         const res = yield request.post("/api/user/create").send(user);
         user.id = res.body.data.id;
@@ -45,7 +41,9 @@ describe("POST /api/user/create", function () {
         expect(res.body.status).toBe("success");
     }));
     it("returns status code `200`", () => __awaiter(this, void 0, void 0, function* () {
-        const res = yield request.post("/api/user/login").send(user3);
+        const res = yield request
+            .post("/api/user/login")
+            .send({ email: user.email, password: user.password });
         user.token = res.body.data.token;
         expect(res.status).toEqual(200);
         expect(typeof res.body).toBe("object");

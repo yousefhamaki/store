@@ -30,7 +30,7 @@ const user = {
     firstname: "yousef",
     lastname: "hamaki2",
     username: "yousef-hamaki",
-    email: "yousefhamaki3@gmail.com",
+    email: "testordermodels@gmail.com",
     password: "hamaki2603",
 };
 describe("creating user and product to test order", () => {
@@ -77,7 +77,7 @@ describe("testing (OrderModel)", () => {
     it("it expect object order info after update", () => __awaiter(void 0, void 0, void 0, function* () {
         order.status = "completed";
         const create = yield model.update(order);
-        expect(model.getUserOrders).toBeDefined;
+        expect(model.update).toBeDefined;
         expect(create.status).toEqual("completed");
     }));
     it("it expect order deleted", () => __awaiter(void 0, void 0, void 0, function* () {

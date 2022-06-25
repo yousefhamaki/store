@@ -18,11 +18,11 @@ const Puser = {
     firstname: "yousef",
     lastname: "hamaki2",
     username: "yousef-hamaki-product",
-    email: "product-test@gmail.com",
+    email: "productemailtest@gmail.com",
     password: "hamaki2603",
 };
 const user3 = {
-    email: "product-test@gmail.com",
+    email: "productemailtest@gmail.com",
     password: "hamaki2603",
 };
 const product = {
@@ -38,7 +38,7 @@ const product2 = {
 };
 const request = (0, supertest_1.default)(index_1.default);
 //create and auth user to make product requests
-describe("POST /api/user/create", function () {
+describe("create user and make auth to add products", function () {
     it("returns status code `200`", () => __awaiter(this, void 0, void 0, function* () {
         const res = yield request.post("/api/user/create").send(Puser);
         Puser.id = res.body.data.id;

@@ -8,12 +8,7 @@ const user = {
   firstname: "yousef",
   lastname: "hamaki2",
   username: "yousef-hamaki-order",
-  email: "order@gmail.com",
-  password: "hamaki2603",
-} as User;
-
-const user3 = {
-  email: "order@gmail.com",
+  email: "add_order@gmail.com",
   password: "hamaki2603",
 } as User;
 
@@ -29,19 +24,22 @@ const order = {
 
 const request = supertest(app);
 //create and auth user to make product requests
-describe("POST /api/user/create", function () {
+describe("create new user and make auth to add order", function () {
   it("returns status code `200`", async () => {
     const res = await request.post("/api/user/create").send(user);
 
     user.id = res.body.data.id;
     order.user_id = res.body.data.id;
+
     expect(res.status).toEqual(200);
     expect(typeof res.body).toBe("object");
     expect(res.body.status).toBe("success");
   });
 
   it("returns status code `200`", async () => {
-    const res = await request.post("/api/user/login").send(user3);
+    const res = await request
+      .post("/api/user/login")
+      .send({ email: user.email, password: user.password });
 
     user.token = res.body.data.token;
     expect(res.status).toEqual(200);

@@ -35,9 +35,11 @@ TOKEN_SECRET=your-secret-token
 ## Steps run app for the first time
 
 1. write "yarn" in command line to install required packages
-2. create database store_dev in postgre db
-3. create another database store_test in postgre db to test code
-4. "yarn migrate" use this command to migrate tables
-5. "yarn start" this command will run the app
-6. server is running on port 5000 || http://localhost:5000/
-7. database is running on port 5432
+2. create database "store_dev" in postgre db
+3. create another database "store_test" in postgre db to test code
+4. create .env file and put required variables in .env file
+5. "yarn migrate" use this command to migrate tables
+6. "yarn start" this command will run the app
+7. "yarn test" this command will test the app **notice** to run test change [NODE_ENV]to[test] from [.env] and run migration to migrate tables before start
+8. server is running on port 5000 || http://localhost:5000/
+9. database is running on port 5432

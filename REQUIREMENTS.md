@@ -26,8 +26,6 @@
 - Create {link: http://localhost:5000/api/order/, method: [POST], required: [token][product_id, quantity]}
 - Update {link: http://localhost:5000/api/order/update, method: [PUT], required: [token][id: order_id,product_id, quantity, status]}**Notice** It will only change the order details to the initiator of the order otherwise it will return an empty object
 - Delete {link: http://localhost:5000/api/order/delete/:id, method: [DELETE], required: [token][:id is order_id]}**Notice** It will only delete the order if you are the initiator of the order otherwise it will return an empty object
-- Current Order by user (args: user id)[token required]
-- [OPTIONAL] Completed Orders by user (args: user id)[token required]
 
 ## Data Shapes
 

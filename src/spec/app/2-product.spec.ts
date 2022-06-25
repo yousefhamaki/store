@@ -7,12 +7,12 @@ const Puser = {
   firstname: "yousef",
   lastname: "hamaki2",
   username: "yousef-hamaki-product",
-  email: "product-test@gmail.com",
+  email: "productemailtest@gmail.com",
   password: "hamaki2603",
 } as User;
 
 const user3 = {
-  email: "product-test@gmail.com",
+  email: "productemailtest@gmail.com",
   password: "hamaki2603",
 } as User;
 
@@ -32,7 +32,7 @@ const product2 = {
 
 const request = supertest(app);
 //create and auth user to make product requests
-describe("POST /api/user/create", function () {
+describe("create user and make auth to add products", function () {
   it("returns status code `200`", async () => {
     const res = await request.post("/api/user/create").send(Puser);
 
