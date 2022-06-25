@@ -18,6 +18,33 @@ Your application must make use of the following libraries:
 - morgan from npm for loggen middleware
 - helmet from npm for security
 
+**devDependencies**
+
+- "@types/bcrypt" from npm to use typescript
+- "@types/express" from npm to use typescript
+- "@types/helmet" from npm to use typescript
+- "@types/jasmine" from npm to use typescript
+- "@types/jsonwebtoken" from npm to use typescript
+- "@types/morgan" from npm to use typescript
+- "@types/node" from npm to use typescript
+- "@types/pg" from npm to use typescript
+- "@types/request" from npm to use typescript
+- "@types/supertest" from npm to use typescript
+- "@typescript-eslint/eslint-plugin" from npm to use typescript
+- "@typescript-eslint/parser" from npm to use typescript
+- "eslint" from npm to write prettier code
+- "eslint-config-prettier" from npm to write prettier code
+- "eslint-plugin-prettier" from npm to write prettier code
+- "jasmine" from npm to test code
+- "jasmine-spec-reporter" from npm to test code
+- "jasmine-ts" from npm to test code
+- "nodemon" from npm to Update the server after any change
+- "prettier" from npm to write prettier code
+- "request" from npm to test code,
+- "supertest" from npm to test code
+- "ts-node" from npm to use typescript
+- "typescript" from npm to use typescript
+
 ## .env required variables
 
 PORT=5000
