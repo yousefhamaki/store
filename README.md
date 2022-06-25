@@ -21,7 +21,7 @@ Your application must make use of the following libraries:
 ## .env required variables
 
 PORT=5000
-NODE_ENV=dev
+NODE_ENV=[dev]or[test]
 PGHOST=localhost
 PGDATABASE=store_dev
 PGDATABASE_TEST=store_test
@@ -29,7 +29,7 @@ PGPORT=5432
 PGUSER=your-postgres-user
 PGPASSWORD=your-postgres-password
 BCRYPT_PASSWORD=your-bcrypt-password
-BCRYPT_ROUNDS=10your-bcrypt-secure
+BCRYPT_ROUNDS=your-bcrypt-secure
 TOKEN_SECRET=your-secret-token
 
 ## Steps run app for the first time
