@@ -40,6 +40,6 @@ TOKEN_SECRET=your-secret-token
 4. create .env file and put required variables in .env file
 5. "yarn migrate" use this command to migrate tables
 6. "yarn start" this command will run the app
-7. "yarn test" this command will test the app **notice** to run test change [NODE_ENV]to[test] from [.env] and run migration to migrate tables before start
+7. "yarn test" this command will test the app **notice** to run test change [NODE_ENV]to[test] from [.env]
 8. server is running on port 5000 || http://localhost:5000/
 9. database is running on port 5432
