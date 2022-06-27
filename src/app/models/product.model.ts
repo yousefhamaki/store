@@ -44,42 +44,6 @@ class ProductModel {
       );
     }
   }
-  //update product
-  async updateProduct(product: Product): Promise<Product> {
-    try {
-      const connect = await db.connect();
-      const query = `UPDATE products SET name=$1 , price=$2 WHERE id=$3 returning *`;
-      const result = await connect.query(query, [
-        product.name,
-        product.price,
-        product.id,
-      ]);
-      //release connection
-      connect.release();
-      //return result
-      return result.rows[0];
-    } catch (err) {
-      throw new Error(
-        `Could not update user ${product.id} : ${(err as Error).message}`
-      );
-    }
-  }
-  //delete product
-  async deleteProduct(id: string): Promise<Product> {
-    try {
-      const connect = await db.connect();
-      const query = `DELETE FROM products WHERE id=$1 returning *`;
-      const result = await connect.query(query, [id]);
-      //release connection
-      connect.release();
-      //return result
-      return result.rows[0];
-    } catch (err) {
-      throw new Error(
-        `Could not delete user ${id} : ${(err as Error).message}`
-      );
-    }
-  }
 }
 
 export default ProductModel;

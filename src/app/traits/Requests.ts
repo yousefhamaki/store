@@ -2,10 +2,10 @@ import JsonReurn from "../interface/JsonReturn";
 
 /* user requests */
 export const createUser: { [key: string]: string } = {
-  email: "required",
   username: "required",
   firstname: "required",
   lastname: "required",
+  email: "required",
   password: "required",
 };
 
@@ -42,12 +42,7 @@ export const updateProduct: { [key: string]: string } = {
 /* order requests */
 
 export const createOrder: { [key: string]: string } = {
-  product_id: "required",
-  quantity: "required|number",
-};
-
-export const getOrder: { [key: string]: string } = {
-  id: "required",
+  products: "required|array",
 };
 
 export const updateOrder: { [key: string]: string } = {

@@ -89,40 +89,5 @@ class ProductRouter {
             }
         });
     }
-    updateProduct(req, res, next) {
-        return __awaiter(this, void 0, void 0, function* () {
-            /* request query handler */
-            const requestInfo = (0, CheckQuery_1.default)(req.body, requests.updateProduct);
-            if (requestInfo.length > 0) {
-                return res.status(412).json(requests.validReturn(requestInfo));
-            }
-            try {
-                const update = yield productModel.updateProduct(req.body);
-                return res.json({
-                    status: "success",
-                    message: "Your product was updated successfully",
-                    data: Object.assign({}, update),
-                });
-            }
-            catch (err) {
-                next(err);
-            }
-        });
-    }
-    deleteProduct(req, res, next) {
-        return __awaiter(this, void 0, void 0, function* () {
-            try {
-                const deleteInfo = yield productModel.deleteProduct(req.params.id);
-                return res.json({
-                    status: "success",
-                    message: "Your product was deleted successfully",
-                    data: Object.assign({}, deleteInfo),
-                });
-            }
-            catch (err) {
-                next(err);
-            }
-        });
-    }
 }
 exports.default = ProductRouter;

@@ -1,8 +1,9 @@
 type Order = {
   id: string;
   user_id: string;
-  quantity: number;
+  order_id: string;
   product_id: string;
+  products: [{ [id: string]: string | number }];
   status: string;
 };
 

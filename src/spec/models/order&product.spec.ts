@@ -8,10 +8,11 @@ import User from "../../app/types/user.type";
 const model = new OrderModel();
 const Productmodel = new ProductModel();
 const userModel = new UserModel();
+const model2 = new ProductModel();
 
 const order = {
-  quantity: 12,
   status: "active",
+  order_id: "" as string,
 } as Order;
 
 const product = {
@@ -39,7 +40,7 @@ describe("creating user and product to test order", () => {
 
   it("it expect new product created", async () => {
     const create = await Productmodel.create(product);
-    order.product_id = create.id;
+    order.products = [{ id: create.id, quantity: 12 }];
     product.id = create.id;
 
     expect(Productmodel.create).toBeDefined;
@@ -47,27 +48,37 @@ describe("creating user and product to test order", () => {
   });
 });
 
+describe("testing (productModel)", () => {
+  it("it expect to get product by id", async () => {
+    const create = await model2.getProduct(product.id);
+
+    expect(model2.getProduct).toBeDefined;
+    expect(create.id).toBeDefined;
+    expect(create.name).toBeDefined;
+    expect(create.price).toBeDefined;
+  });
+
+  it("it expect get AllProducts in db", async () => {
+    const create = await model2.getAll();
+
+    expect(model2.getAll).toBeDefined;
+    expect(create.length).toBeGreaterThan(0);
+  });
+});
+
 describe("testing (OrderModel)", () => {
   it("it expect order created", async () => {
     const create = await model.create(order);
-    order.id = create.id;
+    order.order_id = create[0].order_id as string;
     expect(model.create).toBeDefined;
-    expect(create.id).toBeDefined;
-    expect(create.product_id).toBeDefined;
-    expect(create.quantity).toBeDefined;
-    expect(create.user_id).toBeDefined;
-    expect(create.status).toBeDefined;
+    expect(create.length).toBe(1);
   });
 
   it("it expect object contains order info", async () => {
-    const create = await model.getOrder(order.id, order.user_id);
+    const create = await model.getOrder(order.order_id, order.user_id);
 
     expect(model.getOrder).toBeDefined;
-    expect(create.id).toBeDefined;
-    expect(create.product_id).toBeDefined;
-    expect(create.quantity).toBeDefined;
-    expect(create.user_id).toBeDefined;
-    expect(create.status).toBeDefined;
+    expect(create.length).toBeGreaterThan(0);
   });
 
   it("it expect object contains all user order info", async () => {
@@ -77,38 +88,10 @@ describe("testing (OrderModel)", () => {
     expect(create.length).toEqual(1);
   });
 
-  it("it expect object order info after update", async () => {
-    order.status = "completed";
-    const create = await model.update(order);
+  it("it expect array", async () => {
+    const create = await model.completedOrders(order.user_id);
 
-    expect(model.update).toBeDefined;
-    expect(create.status).toEqual("completed");
-  });
-
-  it("it expect order deleted", async () => {
-    const create = await model.deleteOrder(order.id, order.user_id);
-
-    expect(model.deleteOrder).toBeDefined;
-    expect(create.id).toBeDefined;
-    expect(create.product_id).toBeDefined;
-    expect(create.quantity).toBeDefined;
-    expect(create.user_id).toBeDefined;
-    expect(create.status).toBeDefined;
-  });
-});
-
-describe("remove user and product to end order test", () => {
-  it("it expect product deleted", async () => {
-    const create = await Productmodel.deleteProduct(product.id);
-
-    expect(Productmodel.deleteProduct).toBeDefined;
-    expect(create.id).toBeDefined;
-  });
-
-  it("it expect user removed", async () => {
-    const remove = await userModel.deleteUser(user.id as string);
-
-    expect(userModel.deleteUser).toBeDefined;
-    expect(remove.firstname).toBeDefined;
+    expect(model.getUserOrders).toBeDefined;
+    expect(create.length).toEqual(0);
   });
 });

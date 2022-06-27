@@ -63,43 +63,5 @@ class ProductModel {
             }
         });
     }
-    //update product
-    updateProduct(product) {
-        return __awaiter(this, void 0, void 0, function* () {
-            try {
-                const connect = yield Connect_1.default.connect();
-                const query = `UPDATE products SET name=$1 , price=$2 WHERE id=$3 returning *`;
-                const result = yield connect.query(query, [
-                    product.name,
-                    product.price,
-                    product.id,
-                ]);
-                //release connection
-                connect.release();
-                //return result
-                return result.rows[0];
-            }
-            catch (err) {
-                throw new Error(`Could not update user ${product.id} : ${err.message}`);
-            }
-        });
-    }
-    //delete product
-    deleteProduct(id) {
-        return __awaiter(this, void 0, void 0, function* () {
-            try {
-                const connect = yield Connect_1.default.connect();
-                const query = `DELETE FROM products WHERE id=$1 returning *`;
-                const result = yield connect.query(query, [id]);
-                //release connection
-                connect.release();
-                //return result
-                return result.rows[0];
-            }
-            catch (err) {
-                throw new Error(`Could not delete user ${id} : ${err.message}`);
-            }
-        });
-    }
 }
 exports.default = ProductModel;

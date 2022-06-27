@@ -72,11 +72,6 @@ class OrderController {
     getOrder(req, res, next) {
         var _a, _b;
         return __awaiter(this, void 0, void 0, function* () {
-            /* request query handler */
-            const requestInfo = (0, CheckQuery_1.default)(req.params, requests.getOrder);
-            if (requestInfo.length > 0) {
-                return res.status(412).json(requests.validReturn(requestInfo));
-            }
             if (!((_a = req.user) === null || _a === void 0 ? void 0 : _a.id)) {
                 return res.status(401).json({
                     status: "failed",
@@ -116,8 +111,8 @@ class OrderController {
             }
         });
     }
-    deleteOrder(req, res, next) {
-        var _a, _b;
+    getCompletedOrders(req, res, next) {
+        var _a;
         return __awaiter(this, void 0, void 0, function* () {
             if (!((_a = req.user) === null || _a === void 0 ? void 0 : _a.id)) {
                 return res.status(401).json({
@@ -126,39 +121,10 @@ class OrderController {
                 });
             }
             try {
-                const order = yield orderModel.deleteOrder(req.params.id, (_b = req.user) === null || _b === void 0 ? void 0 : _b.id);
+                const orders = yield orderModel.completedOrders(req.user.id);
                 return res.json({
                     status: "success",
-                    message: "This order was deleted successfully",
-                    data: Object.assign({}, order),
-                });
-            }
-            catch (err) {
-                next(err);
-            }
-        });
-    }
-    updateOrder(req, res, next) {
-        var _a, _b;
-        return __awaiter(this, void 0, void 0, function* () {
-            /* request query handler */
-            const requestInfo = (0, CheckQuery_1.default)(req.body, requests.updateOrder);
-            if (requestInfo.length > 0) {
-                return res.status(412).json(requests.validReturn(requestInfo));
-            }
-            if (!((_a = req.user) === null || _a === void 0 ? void 0 : _a.id)) {
-                return res.status(401).json({
-                    status: "failed",
-                    message: "Failed login",
-                });
-            }
-            req.body.user_id = (_b = req.user) === null || _b === void 0 ? void 0 : _b.id;
-            try {
-                const update = yield orderModel.update(req.body);
-                return res.json({
-                    status: "success",
-                    message: "Your order was updated successfully",
-                    data: Object.assign({}, update),
+                    data: Object.assign({}, orders),
                 });
             }
             catch (err) {

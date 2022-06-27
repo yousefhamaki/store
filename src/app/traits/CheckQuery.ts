@@ -19,6 +19,12 @@ function QueryCheck(
           result[result.length] = "oh! oh " + key + " must be number";
         }
       }
+
+      if (stand.indexOf("array") > -1) {
+        if (!Array.isArray(query[key])) {
+          result[result.length] = "oh! oh " + key + " must be array";
+        }
+      }
     }
   }
   return result;

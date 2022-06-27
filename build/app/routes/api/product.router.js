@@ -11,6 +11,4 @@ const controller = new Product_controller_1.default();
 routes.get("/", ValidateToken_middleware_1.default, controller.getAll); //tested
 routes.get("/:id", ValidateToken_middleware_1.default, controller.getProduct); //tested
 routes.post("/create", ValidateToken_middleware_1.default, controller.create); //tested
-routes.put("/change", ValidateToken_middleware_1.default, controller.updateProduct); //tested
-routes.delete("/delete/:id", ValidateToken_middleware_1.default, controller.deleteProduct); //tested
 exports.default = routes;

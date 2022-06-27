@@ -29,10 +29,6 @@ const product = {
     name: "test-product",
     price: 250,
 };
-const Nproduct = {
-    name: "test-product update",
-    price: 300,
-};
 const product2 = {
     name: "test product",
 };
@@ -95,39 +91,6 @@ describe("POST /api/product/", function () {
         expect(typeof res.body).toBe("object");
     }));
 });
-describe("POST /api/product/change", function () {
-    it("returns status code `200`", () => __awaiter(this, void 0, void 0, function* () {
-        const res = yield request
-            .put("/api/product/change")
-            .send({
-            id: product.id,
-            name: Nproduct.name,
-            price: Nproduct.price,
-        })
-            .set({ Authorization: Puser.token });
-        expect(res.status).toEqual(200);
-        expect(typeof res.body).toBe("object");
-        expect(res.body.status).toBe("success");
-    }));
-    it("returns status code `401`", () => __awaiter(this, void 0, void 0, function* () {
-        const res = yield request.put("/api/product/change").send({
-            id: product.id,
-            name: Nproduct.name,
-            price: Nproduct.price,
-        });
-        expect(res.status).toEqual(401);
-        expect(typeof res.body).toBe("object");
-    }));
-    it("returns status code `412`", () => __awaiter(this, void 0, void 0, function* () {
-        const res = yield request
-            .put("/api/product/change")
-            .send(Nproduct)
-            .set({ Authorization: Puser.token });
-        expect(res.status).toEqual(412);
-        expect(typeof res.body).toBe("object");
-        expect(res.body.status).toBe("failed");
-    }));
-});
 describe("POST /api/product/:id", function () {
     it("returns status code `200`", () => __awaiter(this, void 0, void 0, function* () {
         const res = yield request
@@ -139,23 +102,6 @@ describe("POST /api/product/:id", function () {
     }));
     it("returns status code `401`", () => __awaiter(this, void 0, void 0, function* () {
         const res = yield request.get("/api/product/" + product.id);
-        expect(res.status).toEqual(401);
-        expect(typeof res.body).toBe("object");
-    }));
-});
-describe("DELETE /api/product/delete", function () {
-    it("returns status code `200`", () => __awaiter(this, void 0, void 0, function* () {
-        const res = yield request
-            .delete("/api/product/delete/" + product.id)
-            .set({ Authorization: Puser.token });
-        expect(res.status).toEqual(200);
-        expect(typeof res.body).toBe("object");
-        expect(res.body.status).toBe("success");
-    }));
-    it("returns status code `401`", () => __awaiter(this, void 0, void 0, function* () {
-        const res = yield request
-            .delete("/api/product/delete/" + product.id)
-            .send(product2);
         expect(res.status).toEqual(401);
         expect(typeof res.body).toBe("object");
     }));

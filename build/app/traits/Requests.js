@@ -1,12 +1,12 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.validReturn = exports.updateOrder = exports.getOrder = exports.createOrder = exports.updateProduct = exports.createProduct = exports.changePass = exports.updateUserInfo = exports.makeLogin = exports.createUser = void 0;
+exports.validReturn = exports.updateOrder = exports.createOrder = exports.updateProduct = exports.createProduct = exports.changePass = exports.updateUserInfo = exports.makeLogin = exports.createUser = void 0;
 /* user requests */
 exports.createUser = {
-    email: "required",
     username: "required",
     firstname: "required",
     lastname: "required",
+    email: "required",
     password: "required",
 };
 exports.makeLogin = {
@@ -36,11 +36,7 @@ exports.updateProduct = {
 };
 /* order requests */
 exports.createOrder = {
-    product_id: "required",
-    quantity: "required|number",
-};
-exports.getOrder = {
-    id: "required",
+    products: "required|array",
 };
 exports.updateOrder = {
     id: "requirder",

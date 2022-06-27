@@ -13,23 +13,16 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const Connect_1 = __importDefault(require("../database/Connect"));
+const orderQuery_1 = __importDefault(require("../traits/orderQuery"));
 class OrderModel {
     create(order) {
         return __awaiter(this, void 0, void 0, function* () {
             try {
                 const connect = yield Connect_1.default.connect();
-                const query = `
-                  insert into orders (user_id, quantity, status, product_id)
-                  values 
-                  ( $1, $2, $3, $4 ) returning *`;
-                const result = yield connect.query(query, [
-                    order.user_id,
-                    order.quantity,
-                    "active",
-                    order.product_id,
-                ]);
+                const query = (0, orderQuery_1.default)(order.products, order.user_id, "active");
+                const result = yield connect.query(query, []);
                 connect.release();
-                return result.rows[0];
+                return result.rows;
             }
             catch (err) {
                 throw new Error(`Unable to create order : ${err.message}`);
@@ -40,16 +33,22 @@ class OrderModel {
         return __awaiter(this, void 0, void 0, function* () {
             try {
                 const connect = yield Connect_1.default.connect();
-                const query = `SELECT * FROM products
+                const query = `SELECT  
+                      products.id, products.name, products.price, 
+                      orders.user_id, product_orders.product_id,
+                      product_orders.order_id  
+                        FROM products
+                        INNER JOIN product_orders
+                            ON products.id = product_orders.product_id
                         INNER JOIN orders
-                            ON products.id = orders.product_id
+                            ON orders.id = product_orders.order_id
                         WHERE
-                            orders.id = $1 
+                          product_orders.order_id = $1 
                         AND 
-                            orders.user_id = $2`;
+                            orders.user_id = $2;`;
                 const result = yield connect.query(query, [id, user_id]);
                 connect.release();
-                return result.rows[0];
+                return result.rows;
             }
             catch (err) {
                 throw new Error(`Unable to get order ${id} : ${err.message}`);
@@ -60,11 +59,23 @@ class OrderModel {
         return __awaiter(this, void 0, void 0, function* () {
             try {
                 const connect = yield Connect_1.default.connect();
-                const query = `SELECT * FROM products
+                const query = `SELECT  
+                      array_to_json(array_agg(products.*)) as products, 
+                      orders.user_id, product_orders.product_id,
+                      product_orders.order_id  
+                        FROM products
+                        INNER JOIN product_orders
+                            ON products.id = product_orders.product_id
                         INNER JOIN orders
-                            ON products.id = orders.product_id
+                            ON orders.id = product_orders.order_id
                         WHERE
-                            orders.user_id = $1`;
+                            orders.user_id = $1
+                        AND
+                            status='active'
+                        GROUP BY
+                            orders.user_id, product_orders.product_id, product_orders.order_id, orders.id
+                        ORDER BY orders.id ASC
+                        LIMIT 1;`;
                 const result = yield connect.query(query, [user_id]);
                 connect.release();
                 return result.rows;
@@ -74,39 +85,33 @@ class OrderModel {
             }
         });
     }
-    deleteOrder(id, user_id) {
+    completedOrders(user_id) {
         return __awaiter(this, void 0, void 0, function* () {
             try {
                 const connect = yield Connect_1.default.connect();
-                const query = `DELETE FROM orders WHERE id = $1 AND user_id=$2 returning *`;
-                const result = yield connect.query(query, [id, user_id]);
+                const query = `SELECT  
+                      array_to_json(array_agg(products.*)) as products, 
+                      orders.user_id, product_orders.product_id,
+                      product_orders.order_id  
+                        FROM products
+                        INNER JOIN product_orders
+                            ON products.id = product_orders.product_id
+                        INNER JOIN orders
+                            ON orders.id = product_orders.order_id
+                        WHERE
+                            orders.user_id = $1
+                        AND
+                            status='complete'
+                        GROUP BY
+                            orders.user_id, product_orders.product_id, product_orders.order_id, orders.id
+                        ORDER BY orders.id ASC
+                        LIMIT 1;`;
+                const result = yield connect.query(query, [user_id]);
                 connect.release();
-                return result.rows[0];
+                return result.rows;
             }
             catch (err) {
-                throw new Error(`Unable to remove order ${id} : ${err.message}`);
-            }
-        });
-    }
-    update(order) {
-        return __awaiter(this, void 0, void 0, function* () {
-            try {
-                const connect = yield Connect_1.default.connect();
-                const query = `
-                  UPDATE orders SET user_id=$1 ,quantity=$2 ,status=$3 ,product_id=$4
-                  WHERE id=$5 returning *`;
-                const result = yield connect.query(query, [
-                    order.user_id,
-                    order.quantity,
-                    order.status,
-                    order.product_id,
-                    order.id,
-                ]);
-                connect.release();
-                return result.rows[0];
-            }
-            catch (err) {
-                throw new Error(`Unable to create order : ${err.message}`);
+                throw new Error(`Unable to get orders of this user ${user_id} : ${err.message}`);
             }
         });
     }

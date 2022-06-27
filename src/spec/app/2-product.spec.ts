@@ -21,11 +21,6 @@ const product = {
   price: 250,
 } as Product;
 
-const Nproduct = {
-  name: "test-product update",
-  price: 300,
-} as Product;
-
 const product2 = {
   name: "test product",
 } as Product;
@@ -103,45 +98,6 @@ describe("POST /api/product/", function () {
   });
 });
 
-describe("POST /api/product/change", function () {
-  it("returns status code `200`", async () => {
-    const res = await request
-      .put("/api/product/change")
-      .send({
-        id: product.id,
-        name: Nproduct.name,
-        price: Nproduct.price,
-      })
-      .set({ Authorization: Puser.token });
-
-    expect(res.status).toEqual(200);
-    expect(typeof res.body).toBe("object");
-    expect(res.body.status).toBe("success");
-  });
-
-  it("returns status code `401`", async () => {
-    const res = await request.put("/api/product/change").send({
-      id: product.id,
-      name: Nproduct.name,
-      price: Nproduct.price,
-    });
-
-    expect(res.status).toEqual(401);
-    expect(typeof res.body).toBe("object");
-  });
-
-  it("returns status code `412`", async () => {
-    const res = await request
-      .put("/api/product/change")
-      .send(Nproduct)
-      .set({ Authorization: Puser.token });
-
-    expect(res.status).toEqual(412);
-    expect(typeof res.body).toBe("object");
-    expect(res.body.status).toBe("failed");
-  });
-});
-
 describe("POST /api/product/:id", function () {
   it("returns status code `200`", async () => {
     const res = await request
@@ -155,27 +111,6 @@ describe("POST /api/product/:id", function () {
 
   it("returns status code `401`", async () => {
     const res = await request.get("/api/product/" + product.id);
-
-    expect(res.status).toEqual(401);
-    expect(typeof res.body).toBe("object");
-  });
-});
-
-describe("DELETE /api/product/delete", function () {
-  it("returns status code `200`", async () => {
-    const res = await request
-      .delete("/api/product/delete/" + product.id)
-      .set({ Authorization: Puser.token });
-
-    expect(res.status).toEqual(200);
-    expect(typeof res.body).toBe("object");
-    expect(res.body.status).toBe("success");
-  });
-
-  it("returns status code `401`", async () => {
-    const res = await request
-      .delete("/api/product/delete/" + product.id)
-      .send(product2);
 
     expect(res.status).toEqual(401);
     expect(typeof res.body).toBe("object");

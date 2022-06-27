@@ -8,8 +8,7 @@ const controllers = new Controllers();
 
 routes.get("/details/:id", Auth, controllers.getOrder); //tested
 routes.get("/me", Auth, controllers.getUserOrders); //tested
+routes.get("/completed", Auth, controllers.getCompletedOrders); //tested
 routes.post("/create", Auth, controllers.create); //tested
-routes.put("/update", Auth, controllers.updateOrder);
-routes.delete("/delete/:id", Auth, controllers.deleteOrder); //tested
 
 export default routes;
