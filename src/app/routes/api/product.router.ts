@@ -5,8 +5,8 @@ import Auth from "../../middleware/ValidateToken.middleware";
 const routes = Router();
 const controller = new controllers();
 
-routes.get("/", Auth, controller.getAll); //tested
-routes.get("/:id", Auth, controller.getProduct); //tested
+routes.get("/", controller.getAll); //tested
+routes.get("/:id", controller.getProduct); //tested
 routes.post("/create", Auth, controller.create); //tested
 
 export default routes;

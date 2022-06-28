@@ -81,39 +81,21 @@ describe("POST /api/product/create", function () {
 
 describe("POST /api/product/", function () {
   it("returns status code `200`", async () => {
-    const res = await request
-      .get("/api/product")
-      .set({ Authorization: Puser.token });
+    const res = await request.get("/api/product");
 
     expect(res.status).toEqual(200);
     expect(typeof res.body).toBe("object");
     expect(res.body.status).toBe("success");
-  });
-
-  it("returns status code `401`", async () => {
-    const res = await request.get("/api/product/");
-
-    expect(res.status).toEqual(401);
-    expect(typeof res.body).toBe("object");
   });
 });
 
 describe("POST /api/product/:id", function () {
   it("returns status code `200`", async () => {
-    const res = await request
-      .get("/api/product/" + product.id)
-      .set({ Authorization: Puser.token });
+    const res = await request.get("/api/product/" + product.id);
 
     expect(res.status).toEqual(200);
     expect(typeof res.body).toBe("object");
     expect(res.body.status).toBe("success");
-  });
-
-  it("returns status code `401`", async () => {
-    const res = await request.get("/api/product/" + product.id);
-
-    expect(res.status).toEqual(401);
-    expect(typeof res.body).toBe("object");
   });
 });
 

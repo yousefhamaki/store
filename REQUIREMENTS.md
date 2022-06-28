@@ -28,26 +28,27 @@
 
 #### Product
 
-- id
-- name
-- price
+- id character uuid uuid_generate_v4()
+- name VARCHAR(50)
+- price VARCHAR(50)
 
 #### User
 
-- id
-- firstName
-- lastName
-- password
+- id character uuid uuid_generate_v4()
+- email VARCHAR(50)
+- firstName VARCHAR(50)
+- lastName VARCHAR(50)
+- password VARCHAR(255)
 
 #### Orders
 
-- id
-- user_id
-- status of order (active or complete)
+- id character uuid uuid_generate_v4()
+- user_id character uuid uuid_generate_v4()
+- status of order (active or complete) VARCHAR(50)
 
 #### product_orders
 
-- id
-- product_id
-- order_id
-- quantity
+- id character uuid uuid_generate_v4()
+- product_id character uuid uuid_generate_v4()
+- order_id uuid uuid_generate_v4()
+- quantity integer

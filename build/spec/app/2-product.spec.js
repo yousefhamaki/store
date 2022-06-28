@@ -78,32 +78,18 @@ describe("POST /api/product/create", function () {
 });
 describe("POST /api/product/", function () {
     it("returns status code `200`", () => __awaiter(this, void 0, void 0, function* () {
-        const res = yield request
-            .get("/api/product")
-            .set({ Authorization: Puser.token });
+        const res = yield request.get("/api/product");
         expect(res.status).toEqual(200);
         expect(typeof res.body).toBe("object");
         expect(res.body.status).toBe("success");
-    }));
-    it("returns status code `401`", () => __awaiter(this, void 0, void 0, function* () {
-        const res = yield request.get("/api/product/");
-        expect(res.status).toEqual(401);
-        expect(typeof res.body).toBe("object");
     }));
 });
 describe("POST /api/product/:id", function () {
     it("returns status code `200`", () => __awaiter(this, void 0, void 0, function* () {
-        const res = yield request
-            .get("/api/product/" + product.id)
-            .set({ Authorization: Puser.token });
+        const res = yield request.get("/api/product/" + product.id);
         expect(res.status).toEqual(200);
         expect(typeof res.body).toBe("object");
         expect(res.body.status).toBe("success");
-    }));
-    it("returns status code `401`", () => __awaiter(this, void 0, void 0, function* () {
-        const res = yield request.get("/api/product/" + product.id);
-        expect(res.status).toEqual(401);
-        expect(typeof res.body).toBe("object");
     }));
 });
 //delete user who created in the first test
